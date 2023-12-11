@@ -21,6 +21,7 @@ repositories {
 
 dependencies {
     implementation("javax.validation:validation-api:2.0.1.Final")
+    implementation("org.webjars:bootstrap:4.6.0")
 
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")

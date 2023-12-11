@@ -9,9 +9,8 @@ import javax.validation.constraints.Email
 @Table(name = "users")
 data class User(
     @Id
-    @GeneratedValue(generator = "uuid2")
-    @GenericGenerator(name = "uuid2", strategy = "org.hibernate.id.UUIDGenerator")
-    val id: UUID,
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val id: UUID? = null,
 
     @Email
     @Column(unique = true, nullable = false)
