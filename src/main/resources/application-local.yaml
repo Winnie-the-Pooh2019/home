@@ -5,7 +5,7 @@ spring:
     username: ivan
     password: 1234
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5433/ivan
+    url: jdbc:postgresql://localhost:5432/postgres
   flyway:
     locations:
       - classpath:/db/migration
