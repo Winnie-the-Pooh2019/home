@@ -2,8 +2,9 @@ FROM openjdk:17-alpine
 LABEL authors="Ivan Duvanov"
 
 ENV JAVA_OPTS="-Dspring.profiles.active=dev"
-WORKDIR /app
-COPY build/libs/*SNAPSHOT.jar /app/home.jar
+COPY . .
+RUN ./gradlew bootJar
+
 EXPOSE 8080
 
-CMD java $JAVA_OPTS -jar /app/home.jar
+CMD java $JAVA_OPTS -jar ./build/libs/*SNAPSHOT.jar

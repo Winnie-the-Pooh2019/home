@@ -31,4 +31,4 @@ jobs:
     - name: Gradlew clean
       run: ./gradlew clean
     - name: Gradlew build bootable jar
-      run: ./gradlew bootJar
+      run: ./gradlew build
