@@ -1,8 +1,9 @@
 FROM openjdk:17-alpine
-LABEL authors="Ivan"
+LABEL authors="Ivan Duvanov"
 
+ENV JAVA_OPTS="-Dspring.profiles.active=dev"
 WORKDIR /app
-COPY build/libs/home-0.0.1-SNAPSHOT.jar /app/home.jar
+COPY build/libs/*SNAPSHOT.jar /app/home.jar
 EXPOSE 8080
 
-ENTRYPOINT ["top", "-b"]
+CMD java $JAVA_OPTS -jar /app/home.jar
