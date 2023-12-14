@@ -34,7 +34,7 @@ jobs:
       id: test
       run: ./gradlew test
     - name: Print test status
-      run: echo ${{ steps.test.outcome }}
+      run: echo $NUMBER
     - name: Send alert in Telegram
       if: steps.test.outcome != 'success'
       uses: appleboy/telegram-action@master
@@ -43,12 +43,12 @@ jobs:
         token: ${{ secrets.TELEGRAM_NOT }}
         message: |
           ❌ Failed to build
-      continue-on-error: true
+          Check report on https://github.com/Winnie-the-Pooh2019/home/actions/runs/$NUMBER
 
     - name: Successful tests
       if: steps.test.outcome != 'success'
       run: |
-        echo "tests error"
+        echo "Tests error"
         exit 1
 
     - name: Gradlew build bootable jar
@@ -72,4 +72,6 @@ jobs:
         to: ${{ secrets.TELEGRAM_ME }}
         token: ${{ secrets.TELEGRAM_NOT }}
         message: |
-          ✔ Application build done
+          ✅ Application build done
+          Deployment link: https://home-production-3d03.up.railway.app/
+          Check report on https://github.com/Winnie-the-Pooh2019/home/actions/runs/$NUMBER
