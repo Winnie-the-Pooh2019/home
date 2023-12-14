@@ -36,7 +36,7 @@ jobs:
     - name: Print test status
       run: echo ${{ steps.test.outcome }}
     - name: Send alert in Telegram
-      if: steps.test.outcome != 'True'
+      if: steps.test.outcome != 'success'
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_ME }}
@@ -46,7 +46,7 @@ jobs:
       continue-on-error: true
 
     - name: Successful tests
-      if: steps.test.outcome != 'True'
+      if: steps.test.outcome != 'success'
       run: |
         echo "tests error"
         exit 1
