@@ -33,21 +33,20 @@ jobs:
     - name: Gradlew test run
       id: test
       run: ./gradlew test
-    - name: Test check
-      run: |
-        if [[ ${{ steps.test.output.status }} != *"True"* ]]; then
-          echo "Tests run failed"
-          exit 1
-        fi
-        echo "All right -_-"
     - name: Send alert in Telegram
-      if: ${{ failure() }}
+      if: steps.test.outcome != 'True'
       uses: appleboy/telegram-action@master
       with:
         to: ${{ secrets.TELEGRAM_ME }}
         token: ${{ secrets.TELEGRAM_NOT }}
         message: |
           ❌ Failed to build
+
+    - name: Successful tests
+      if: steps.test.outcome != 'True'
+      run: |
+        echo "tests error"
+        exit 1
 
     - name: Gradlew build bootable jar
       run: ./gradlew bootJar
