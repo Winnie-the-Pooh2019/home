@@ -59,11 +59,9 @@ jobs:
 
     - name: Deploy to Railway
       id: deploy
-      run: |
-        RAILWAY_TOKEN=$RAILWAY_TOKEN
-        railway up
+      run: railway up
       env:
-        RAILWAY_TOKEN: ${{ secrets.RAILWAY_TOKEN }}
+        RAILWAY_TOKEN: ${{ secrets.CI_TOKEN }}
 
     - name: Print railway status
       run: echo ${{ steps.deploy.output.status }}
