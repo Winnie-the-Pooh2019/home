@@ -28,13 +28,14 @@ jobs:
       with:
         java-version: '17'
         distribution: 'temurin'
+
     - name: Gradlew clean
       run: ./gradlew clean
+
     - name: Gradlew test run
       id: test
       run: ./gradlew test
-    - name: Print test status
-      run: echo $NUMBER
+
     - name: Send alert in Telegram
       if: steps.test.outcome != 'success'
       uses: appleboy/telegram-action@master
@@ -43,7 +44,7 @@ jobs:
         token: ${{ secrets.TELEGRAM_NOT }}
         message: |
           ❌ Failed to build
-          Check report on https://github.com/Winnie-the-Pooh2019/home/actions/runs/$NUMBER
+          Check report on https://github.com/Winnie-the-Pooh2019/home/actions
 
     - name: Successful tests
       if: steps.test.outcome != 'success'
@@ -74,4 +75,4 @@ jobs:
         message: |
           ✅ Application build done
           Deployment link: https://home-production-3d03.up.railway.app/
-          Check report on https://github.com/Winnie-the-Pooh2019/home/actions/runs/$NUMBER
+          Check report on https://github.com/Winnie-the-Pooh2019/home/actions
