@@ -1,7 +1,6 @@
 package com.example.home.model
 
 import jakarta.persistence.*
-import org.hibernate.annotations.GenericGenerator
 import java.util.*
 import javax.validation.constraints.Email
 
@@ -16,5 +15,8 @@ data class User(
     @Column(unique = true, nullable = false)
     val email: String,
 
-    val password: String
+    val password: String,
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    val devices: List<Device>
 )
