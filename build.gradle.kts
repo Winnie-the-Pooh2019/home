@@ -8,6 +8,8 @@ plugins {
     kotlin("plugin.jpa") version "1.9.20"
 
     id("org.flywaydb.flyway") version "9.22.1"
+
+    id("com.google.cloud.tools.appengine") version "2.4.4"
 }
 
 group = "com.example"
@@ -77,4 +79,11 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
     useJUnitPlatform()
+}
+
+appengine {
+    deploy {
+        projectId = "GCLOUD_CONFIG"
+        version = "GCLOUD_CONFIG"
+    }
 }
