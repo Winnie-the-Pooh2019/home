@@ -5,13 +5,13 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Security branch CI with Gradle
+name: Dev branch CI with Gradle
 
 on:
   push:
-    branches: [ "security" ]
+    branches: [ "dev" ]
   pull_request:
-    branches: [ "security" ]
+    branches: [ "dev" ]
 
 permissions:
   contents: read
@@ -48,8 +48,8 @@ jobs:
           to: ${{ secrets.TELEGRAM_ME }}
           token: ${{ secrets.TELEGRAM_NOT }}
           message: |
-            ✅ Application tests done on Security branch 
-            Check report on https://github.com/Winnie-the-Pooh2019/home/tree/security
+            ✅ Application tests done on Dev branch 
+            Check report on https://github.com/Winnie-the-Pooh2019/home/tree/dev
 
       - name: Send alert in Telegram
         if: failure()
@@ -58,5 +58,5 @@ jobs:
           to: ${{ secrets.TELEGRAM_ME }}
           token: ${{ secrets.TELEGRAM_NOT }}
           message: |
-            ❌ Failed to build or tests on Security branch
-            Check report on https://github.com/Winnie-the-Pooh2019/home/tree/security
+            ❌ Failed to build or tests on Dev branch
+            Check report on https://github.com/Winnie-the-Pooh2019/home/tree/dev
