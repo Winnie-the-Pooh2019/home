@@ -27,7 +27,7 @@ class HomeSecurityConfiguration(
             it
                 .requestMatchers("/register/**").permitAll()
                 .requestMatchers("/").hasRole("USER")
-                .requestMatchers("/users").hasRole("ADMIN")
+                .requestMatchers("/users").hasRole("USER")
         }
         .formLogin {
             it.loginPage("/signin")
