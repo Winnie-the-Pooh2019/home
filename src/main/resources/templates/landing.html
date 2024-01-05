@@ -14,7 +14,7 @@
                 <img th:src="${session.user.avatarUrl}" alt="User Avatar" width="30" height="30">
             </li>
             <li class="nav-item" th:if="${session.user == null}">
-                <a class="nav-link" href="/login">Login</a>
+                <a class="nav-link" th:href="@{/logout}">Logout</a>
             </li>
         </ul>
     </div>
