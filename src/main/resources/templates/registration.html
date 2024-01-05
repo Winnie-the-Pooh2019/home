@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <title>Registration</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <form th:action="@{/register}" method="post" class="form-signin" id="registrationForm">
+                <h2 class="text-center">Register</h2>
+                <div class="form-group">
+                    <label for="inputEmail">Email address</label>
+                    <input type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">Password</label>
+                    <input type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                    <input type="checkbox" onclick="myFunction()">  Show Password
+                </div>
+                <div class="form-group">
+                    <label for="inputRepeatPassword">Repeat Password</label>
+                    <input type="password" id="inputRepeatPassword" class="form-control" placeholder="Repeat Password" required>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">Register</button>
+                <a href="/login" class="btn btn-link">Login</a>
+                <hr class="my-4">
+                <button class="btn btn-lg btn-danger btn-block" type="button">Sign in with Google</button>
+                <button class="btn btn-lg btn-dark btn-block" type="button">Sign in with GitHub</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script>
+    function myFunction() {
+        var x = document.getElementById("inputPassword");
+        if (x.type === "password") {
+            x.type = "text";
+        } else {
+            x.type = "password";
+        }
+    }
+    var password = document.getElementById("inputPassword"),
+        confirm_password = document.getElementById("inputRepeatPassword");
+    function validatePassword(){
+        if(password.value !== confirm_password.value) {
+            confirm_password.setCustomValidity("Passwords Don't Match");
+        } else {
+            confirm_password.setCustomValidity('');
+        }
+    }
+    password.onchange = validatePassword;
+    confirm_password.onkeyup = validatePassword;
+</script>
+</body>
+</html>
