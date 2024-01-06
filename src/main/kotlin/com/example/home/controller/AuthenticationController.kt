@@ -26,7 +26,7 @@ class AuthenticationController(
 
     @PostMapping("/register")
     fun registration(@Valid @ModelAttribute("user") userDto: UserDto, result: BindingResult, model: Model): String {
-        if (userService.existsUser(userDto.email))
+        if (userService.existsUserByEmail(userDto.email))
             result.rejectValue("email", "EmailExists", "Such email is already in use")
 
         if (result.hasErrors()) {

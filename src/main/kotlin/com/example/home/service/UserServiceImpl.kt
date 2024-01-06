@@ -23,6 +23,7 @@ class UserServiceImpl(
         val role = roleRepository.findByName("ROLE_USER").orElseThrow { Exception("No role ROLE_USER exists") }
 
         user
+            .addUsername(userDto.username)
             .addEmail(userDto.email)
             .addPassword(passwordEncoder.encode(userDto.password))
             .addRoles(setOf(role))
@@ -30,7 +31,8 @@ class UserServiceImpl(
         userRepository.save(user)
     }
 
-    override fun existsUser(email: String): Boolean = userRepository.findByEmail(email).isPresent
+    override fun existsUserByEmail(email: String): Boolean = userRepository.findByEmail(email).isPresent
+    override fun existsUserByUsername(username: String): Boolean = userRepository.findByUsername(username).isPresent
 
     override fun findAllUsers(): List<UserDto> = userRepository.findAll().map { UserDto(it.email, it.password) }
 }

@@ -1,13 +1,10 @@
 package com.example.home.controller
 
-import com.example.home.repository.UserRepository
-import com.example.home.domain.model.User
 import com.example.home.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 
 @Controller

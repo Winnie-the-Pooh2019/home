@@ -2,16 +2,16 @@ spring:
   application:
     name: Home
   datasource:
-    #    username: ivan
     username: postgres
-    #    password: 1234
     password: 25d45DbD3f5CA3b3F-gD6E*CaaEgBbb*
     driver-class-name: org.postgresql.Driver
-    #    url: jdbc:postgresql://localhost:5433/ivan
     url: jdbc:postgresql://viaduct.proxy.rlwy.net:11498/railway
-  #  jpa:
-  #    generate-ddl: true
   flyway:
     locations:
       - classpath:/db/migration
       - classpath:/db/callback
+
+home:
+  jwt:
+    secret: bringmetoussr
+    expiration-ms: 60000

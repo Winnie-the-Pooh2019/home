@@ -1,7 +1,6 @@
 package com.example.home.domain.model
 
 import jakarta.persistence.*
-import org.hibernate.annotations.GenericGenerator
 import java.util.*
 import javax.validation.constraints.Email
 
@@ -11,6 +10,9 @@ data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     var id: UUID? = null,
+
+    @Column(unique = true, nullable = false)
+    var username: String = "",
 
     @Email
     @Column(unique = true, nullable = false)
@@ -24,6 +26,8 @@ data class User(
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")])
     var roles: Set<Role> = emptySet()
 ) {
+    fun addUsername(username: String) = apply { this.username = username }
+
     fun addEmail(email: String) = apply { this.email = email }
 
     fun addPassword(password: String) = apply { this.password = password }
