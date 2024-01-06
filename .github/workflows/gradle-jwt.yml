@@ -1,0 +1,55 @@
+name: Security branch CI with Gradle
+
+on:
+  push:
+    branches: [ "jwt" ]
+  pull_request:
+    branches: [ "jwt" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Gradlew clean
+        run: ./gradlew clean
+
+      - name: Gradlew test run
+        id: test
+        run: ./gradlew test
+
+      - name: Successful tests
+        if: steps.test.outcome != 'success'
+        run: |
+          echo "Tests error"
+          exit 1
+
+      - name: Successful build
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_ME }}
+          token: ${{ secrets.TELEGRAM_NOT }}
+          message: |
+            ✅ Application tests done on Jwt branch 
+            Check report on https://github.com/Winnie-the-Pooh2019/home/tree/jwt-security
+
+      - name: Send alert in Telegram
+        if: failure()
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_ME }}
+          token: ${{ secrets.TELEGRAM_NOT }}
+          message: |
+            ❌ Failed to build or tests on Jwt branch
+            Check report on https://github.com/Winnie-the-Pooh2019/home/tree/jwt-security
