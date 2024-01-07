@@ -17,9 +17,9 @@ import java.util.*
 
 @Component
 class JwtUtils(
-    @Value("\${home.jwt.secret")
+    @Value("\${home.jwt.secret}")
     private val jwtSecret: String,
-    @Value("\${home.jwt.expiration-ms")
+    @Value("\${home.jwt.expiration-ms}")
     private val jwtExpirationMs: Int
 ) {
     private val logger: KLogger = KotlinLogging.logger { }

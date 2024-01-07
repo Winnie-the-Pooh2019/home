@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import java.beans.Customizer
 
 @Configuration
 @EnableMethodSecurity
@@ -48,7 +49,8 @@ class HomeJwtSecurityConfiguration(
             .exceptionHandling {it.authenticationEntryPoint(unauthorizedHandler)}
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests {
-                it.requestMatchers("/api/auth/**").permitAll()
+                it
+                    .requestMatchers("/api/auth/**").permitAll()
                     .requestMatchers("/api/test/**").permitAll()
                     .anyRequest().authenticated()
             }
