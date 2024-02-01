@@ -36,6 +36,8 @@ class AuthTokenFilter : OncePerRequestFilter() {
 
             SecurityContextHolder.getContext().authentication = authentication
         }
+
+        filterChain.doFilter(request, response)
     }
 
     private fun parseJwt(request: HttpServletRequest): String? {

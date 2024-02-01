@@ -15,7 +15,7 @@ spring:
 
 home:
   jwt:
-    secret: bringmetoussr
+    secret: bringmetoussrbringmetoussrbringmetoussrbringmetoussrbringmetoussr
     expiration-ms: 60000
 server:
-  port: 8888
+  port: 8080
