@@ -3,7 +3,6 @@ package com.example.home.service.impl
 import com.example.home.repository.UserRepository
 import com.example.home.service.HomeUserDetailsService
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
@@ -21,13 +20,6 @@ class HomeUserDetailsServiceImpl(
             .orElseThrow { UsernameNotFoundException("no user with such name found") }
 
         return user
-//        val authorities = user.roles.map { SimpleGrantedAuthority(it.name) }.toSet()
-//
-//        return org.springframework.security.core.userdetails.User(
-//            username,
-//            user.password,
-//            authorities
-//        )
     }
 
     override fun loadUserByUsername(username: String?): UserDetails = loadUserByUserName(username)

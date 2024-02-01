@@ -31,6 +31,7 @@ class UserServiceImpl(
     private val jwtService: JwtService
 ) : UserService {
 
+    // todo add unique email/username checking
     override fun saveUser(userDto: UserDto): User {
         val user = User()
         val role = roleRepository.findByName("ROLE_USER").orElseThrow { Exception("No role ROLE_USER exists") }
@@ -90,6 +91,7 @@ class UserServiceImpl(
     private fun isEmail(usernameOrEmail: String) = usernameOrEmail.contains('@')
 
     override fun existsUserByEmail(email: String): Boolean = userRepository.findByEmail(email).isPresent
+
     override fun existsUserByUserName(username: String): Boolean = userRepository.findByUserName(username).isPresent
 
     override fun findAllUsers(): List<UserDto> = userRepository.findAll().map { UserDto(it.email, it.passWord) }

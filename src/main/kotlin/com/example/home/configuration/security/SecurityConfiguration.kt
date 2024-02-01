@@ -8,6 +8,7 @@ import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationProvider
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
@@ -17,11 +18,10 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true)
 class SecurityConfiguration(
     @Autowired
     private val userDetailsService: HomeUserDetailsService,
-//    @Autowired
-//    private val unauthorizedHandler: AuthEntryPointJwt,
     @Autowired
     private val passwordEncoder: PasswordEncoder,
     @Autowired
@@ -34,9 +34,6 @@ class SecurityConfiguration(
             .authorizeHttpRequests {
                 it
                     .requestMatchers("/api/auth/**").permitAll()
-//                    .requestMatchers("/api/test/**").permitAll()
-                    .requestMatchers("/api/admin").hasAnyAuthority("ROLE_ADMIN")
-                    .requestMatchers("/api/user").hasAnyAuthority("ROLE_USER")
                     .anyRequest().authenticated()
             }
             .authenticationProvider(authenticationProvider())
