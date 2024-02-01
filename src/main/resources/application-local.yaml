@@ -15,7 +15,8 @@ spring:
 
 home:
   jwt:
-    secret: bringmetoussr
-    expiration-ms: 60000
+    secret: nevergonnagiveyouupnevergonnaletyoudownnevergonnarunaroundanddesertyou
+    expiration-ms: 1440000
+    refresh-expiration: 10080000
 server:
   port: 8080

@@ -17,7 +17,9 @@ class JwtServiceImpl(
     @Value("\${home.jwt.secret}")
     private val jwtSecret: String,
     @Value("\${home.jwt.expiration-ms}")
-    private val jwtExpirationMs: Int
+    private val jwtExpirationMs: Int,
+    @Value("\${home.jwt.refresh-expiration}")
+    private val refreshExpiration: Int
 ) : JwtService {
     override fun generateToken(userDetails: UserDetails): String {
         return Jwts.builder().setSubject(userDetails.username)
@@ -26,6 +28,13 @@ class JwtServiceImpl(
             .signWith(getSignKey(), SignatureAlgorithm.HS256)
             .compact()
     }
+
+    override fun generateRefreshToken(extraClaims: Map<String, Any>, userDetails: UserDetails): String = Jwts
+        .builder().setClaims(extraClaims).setSubject(userDetails.username)
+        .setIssuedAt(Date(System.currentTimeMillis()))
+        .setExpiration(Date(System.currentTimeMillis() + refreshExpiration))
+        .signWith(getSignKey(), SignatureAlgorithm.HS256)
+        .compact()
 
     override fun extractUserName(token: String): String = extractClaim(token, Claims::getSubject)
 
