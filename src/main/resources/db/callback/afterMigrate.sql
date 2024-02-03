@@ -1,0 +1,2 @@
+-- COPY users TO '/tmp/users.csv' WITH (FORMAT CSV, HEADER);
+-- COPY users (id, username, email, password) FROM '/tmp/users.csv' DELIMITER ',' CSV HEADER;

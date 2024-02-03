@@ -11,6 +11,19 @@ spring:
       - classpath:/db/migration
       - classpath:/db/callback
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ivan.duvanov.3@gmail.com
+    password: pilnamucvqamgbnz
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+
 home:
   jwt:
     secret: bringmetoussr

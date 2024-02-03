@@ -27,7 +27,10 @@ class User(
     @JoinTable(name = "user_roles",
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")])
-    var roles: Set<Role> = emptySet()
+    var roles: Set<Role> = emptySet(),
+
+    @Column(nullable = false, name = "enabled")
+    var enabled: Boolean = false
 ) : UserDetails {
     fun addUsername(username: String) = apply { this.userName = username }
 
@@ -49,5 +52,5 @@ class User(
 
     override fun isCredentialsNonExpired(): Boolean = true
 
-    override fun isEnabled(): Boolean = true
+    override fun isEnabled(): Boolean = enabled
 }
