@@ -1,5 +1,6 @@
 package com.example.home.domain.dto
 
-data class Message(
+data class HomeError(
+    val statusCode: Int,
     val message: String?
 )

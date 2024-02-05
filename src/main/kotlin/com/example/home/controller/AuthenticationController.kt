@@ -1,7 +1,12 @@
 package com.example.home.controller
 
 import com.example.home.domain.dto.*
+import com.example.home.domain.model.User
+import com.example.home.exceptions.jpa.RoleNotFoundException
+import com.example.home.exceptions.jpa.UserAlreadyExistsException
 import com.example.home.service.UserService
+import com.example.home.utils.HomeAppUtils
+import jakarta.persistence.PersistenceException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.ResponseEntity
@@ -14,26 +19,29 @@ class AuthenticationController(
     @Autowired
     private val userService: UserService,
     @Autowired
-    private val mailSender: JavaMailSender
+    private val mailSender: JavaMailSender,
+    @Autowired
+    private val homeAppUtils: HomeAppUtils
 ) {
 
     @PostMapping("/signup")
-    fun signUp(@RequestBody signUpRequest: UserDto, request: HttpServletRequest): ResponseEntity<*> {
-        if (userService.userExists(signUpRequest))
-            return ResponseEntity.badRequest().body(Message("Such user already exists"))
-
+    fun signUp(@RequestBody signUpRequest: UserDto, request: HttpServletRequest): User {
         val user = userService.saveUser(signUpRequest)
-        val url = request.requestURL.toString().replace(request.servletPath, "")
 
-        val email = userService.prepareEmail(user, url)
+        val email = userService.prepareEmail(user, homeAppUtils.getHostUrl(request))
         mailSender.send(email)
 
-        return ResponseEntity.ok(user)
+        return user
     }
 
     @GetMapping("/signup/confirm")
-    fun confirmation(@RequestParam token: String): ResponseEntity<*> =
-        ResponseEntity.ok(userService.activateUser(token).id)
+    fun confirmation(@RequestParam token: String, request: HttpServletRequest): Redirect {
+        userService.activateUser(token)
+
+        val url = homeAppUtils.getHostUrl(request)
+
+        return Redirect(url = url)
+    }
 
     @PostMapping("/signin")
     fun signIn(@RequestBody signInRequest: SignInRequest): ResponseEntity<SignInResponse> =

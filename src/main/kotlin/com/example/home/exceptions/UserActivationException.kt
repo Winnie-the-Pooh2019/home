@@ -1,4 +1,4 @@
 package com.example.home.exceptions
 
-class UserActivationException : Exception() {
+class UserActivationException(message: String?) : Exception(message) {
 }

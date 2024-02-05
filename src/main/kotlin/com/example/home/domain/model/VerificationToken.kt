@@ -7,8 +7,8 @@ import java.util.UUID
 @Table(name = "verification_tokens")
 data class VerificationToken(
     @Id
-//    @GeneratedValue(strategy = GenerationType.UUID)
-    val token: UUID,
+    @GeneratedValue(strategy = GenerationType.UUID)
+    val token: UUID? = null,
 
     @OneToOne(targetEntity = User::class, fetch = FetchType.EAGER)
     @JoinColumn(nullable = false, name = "user_id")
