@@ -1,3 +1,3 @@
 package com.example.home.exceptions
 
-class TokenExpiredException : Exception()
+class TokenExpiredException(message: String?) : Exception(message)

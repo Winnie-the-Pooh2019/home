@@ -6,7 +6,7 @@ import com.example.home.domain.dto.SignInResponse
 import com.example.home.domain.dto.UserDto
 import com.example.home.domain.model.User
 import com.example.home.domain.model.VerificationToken
-import com.example.home.exceptions.*
+import com.example.home.exceptions.TokenExpiredException
 import com.example.home.exceptions.jpa.RoleNotFoundException
 import com.example.home.exceptions.jpa.UserAlreadyExistsException
 import com.example.home.exceptions.jpa.UserNotFoundException
@@ -17,7 +17,6 @@ import com.example.home.repository.VerificationTokenRepository
 import com.example.home.service.JwtService
 import com.example.home.service.UserService
 import jakarta.persistence.PersistenceException
-import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.security.authentication.AuthenticationManager
@@ -25,10 +24,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import org.springframework.web.bind.annotation.RequestBody
 import java.util.*
-import javax.naming.InvalidNameException
-import kotlin.jvm.Throws
 
 @Service
 class UserServiceImpl(
@@ -86,12 +82,13 @@ class UserServiceImpl(
         )
     }
 
-    override fun refreshToken(@RequestBody refreshTokenRequest: RefreshTokenRequest): SignInResponse? {
+    override fun refreshToken(refreshTokenRequest: RefreshTokenRequest): SignInResponse {
         val username = jwtService.extractUserName(refreshTokenRequest.refreshToken)
-        val user = userRepository.findByUserName(username).orElseThrow { InvalidNameException("No user found") }
+        val user = userRepository.findByUserName(username)
+            .orElseThrow { UserNotFoundException("No user found") }
 
         if (!jwtService.isTokenValid(refreshTokenRequest.refreshToken, user))
-            throw TokenExpiredException()
+            throw TokenExpiredException("Token expired")
 
         val jwt = jwtService.generateToken(user)
         val refreshToken = jwtService.generateRefreshToken(HashMap(), user)
@@ -120,7 +117,7 @@ class UserServiceImpl(
         val verificationToken = verificationTokenRepository.findById(UUID.fromString(token))
 
         if (verificationToken.isEmpty)
-            throw VerificationTokenNotFoundException("Code you sent doesnt exists")
+            throw VerificationTokenNotFoundException("You have been already completed registration")
 
         val user = verificationToken.get().user
         verificationTokenRepository.delete(verificationToken.get())
@@ -129,23 +126,15 @@ class UserServiceImpl(
     }
 
     @Transactional
-    override fun activateUser(token: String) = try {
+    override fun activateUser(token: String): User {
         val user = findUserByVerificationToken(token)
         user.enabled = true
 
-        userRepository.save(user)
-    } catch (e: Exception) {
-        throw UserActivationException(e.message)
+        return userRepository.save(user)
     }
 
     private fun isEmail(usernameOrEmail: String) = usernameOrEmail.contains('@')
 
-    override fun existsUserByEmail(email: String): Boolean = userRepository.findByEmail(email).isPresent
-
-    override fun existsUserByUserName(username: String): Boolean = userRepository.findByUserName(username).isPresent
-
-    override fun userExists(userDto: UserDto): Boolean =
+    fun userExists(userDto: UserDto): Boolean =
         userRepository.findByUserNameOrEmail(userDto.username, userDto.email).isPresent
-
-    override fun findAllUsers(): List<UserDto> = userRepository.findAll().map { UserDto(it.email, it.passWord) }
 }

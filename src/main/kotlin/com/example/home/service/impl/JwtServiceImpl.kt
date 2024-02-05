@@ -2,6 +2,7 @@ package com.example.home.service.impl
 
 import com.example.home.service.JwtService
 import io.jsonwebtoken.Claims
+import io.jsonwebtoken.JwtException
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import io.jsonwebtoken.io.Decoders
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.security.Key
 import java.util.*
+import kotlin.jvm.Throws
 
 @Service
 class JwtServiceImpl(
@@ -44,12 +46,11 @@ class JwtServiceImpl(
         return (username == userDetails.username && !isTokenExpired(token))
     }
 
-    fun isTokenExpired(token: String): Boolean = extractClaim(token, Claims::getExpiration).before(Date())
+    private fun isTokenExpired(token: String): Boolean = extractClaim(token, Claims::getExpiration).before(Date())
 
-    private fun <T> extractClaim(token: String, claimsResolver: (claims: Claims) -> T): T {
-        val claims = extractAllClaims(token)
-        return claimsResolver(claims)
-    }
+    @Throws(exceptionClasses = [JwtException::class])
+    private fun <T> extractClaim(token: String, claimsResolver: (claims: Claims) -> T): T =
+        claimsResolver(extractAllClaims(token))
 
     private fun getSignKey(): Key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(jwtSecret))
 

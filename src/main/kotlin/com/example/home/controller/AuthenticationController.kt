@@ -2,14 +2,10 @@ package com.example.home.controller
 
 import com.example.home.domain.dto.*
 import com.example.home.domain.model.User
-import com.example.home.exceptions.jpa.RoleNotFoundException
-import com.example.home.exceptions.jpa.UserAlreadyExistsException
 import com.example.home.service.UserService
 import com.example.home.utils.HomeAppUtils
-import jakarta.persistence.PersistenceException
 import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.http.ResponseEntity
 import org.springframework.mail.javamail.JavaMailSender
 import org.springframework.web.bind.annotation.*
 
@@ -44,10 +40,9 @@ class AuthenticationController(
     }
 
     @PostMapping("/signin")
-    fun signIn(@RequestBody signInRequest: SignInRequest): ResponseEntity<SignInResponse> =
-        ResponseEntity.ok(userService.signIn(signInRequest))
+    fun signIn(@RequestBody signInRequest: SignInRequest): SignInResponse = userService.signIn(signInRequest)
 
     @PostMapping("/refresh")
-    fun refresh(@RequestBody refreshTokenRequest: RefreshTokenRequest): ResponseEntity<SignInResponse> =
-        ResponseEntity.ok(userService.refreshToken(refreshTokenRequest))
+    fun refresh(@RequestBody refreshTokenRequest: RefreshTokenRequest): SignInResponse =
+        userService.refreshToken(refreshTokenRequest)
 }
