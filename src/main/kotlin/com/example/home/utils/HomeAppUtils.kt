@@ -9,4 +9,6 @@ class HomeAppUtils {
         .requestURL
         .toString()
         .replace(request.servletPath, "")
+
+    fun isEmail(usernameOrEmail: String) = usernameOrEmail.contains('@')
 }

@@ -9,15 +9,16 @@ import com.example.home.domain.model.VerificationToken
 import com.example.home.exceptions.TokenExpiredException
 import com.example.home.exceptions.UserAlreadyActivatedException
 import com.example.home.exceptions.VerificationTokenExpiredException
-import com.example.home.exceptions.jpa.RoleNotFoundException
-import com.example.home.exceptions.jpa.UserAlreadyExistsException
-import com.example.home.exceptions.jpa.UserNotFoundException
-import com.example.home.exceptions.jpa.VerificationTokenNotFoundException
+import com.example.home.exceptions.RoleNotFoundException
+import com.example.home.exceptions.UserAlreadyExistsException
+import com.example.home.exceptions.UserNotFoundException
+import com.example.home.exceptions.VerificationTokenNotFoundException
 import com.example.home.repository.RoleRepository
 import com.example.home.repository.UserRepository
 import com.example.home.repository.VerificationTokenRepository
 import com.example.home.service.JwtService
 import com.example.home.service.UserService
+import com.example.home.utils.HomeAppUtils
 import jakarta.persistence.PersistenceException
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
@@ -45,6 +46,8 @@ class UserServiceImpl(
     private val authenticationManager: AuthenticationManager,
     @Autowired
     private val jwtService: JwtService,
+    @Autowired
+    private val homeAppUtils: HomeAppUtils,
     @Value("\${home.jwt.verification-expiration}")
     private val verificationTokenExpiration: Int
 ) : UserService {
@@ -76,7 +79,7 @@ class UserServiceImpl(
         )
 
         val user =
-            (if (isEmail(signInRequest.usernameOrEmail)) userRepository.findByEmail(signInRequest.usernameOrEmail)
+            (if (homeAppUtils.isEmail(signInRequest.usernameOrEmail)) userRepository.findByEmail(signInRequest.usernameOrEmail)
             else userRepository.findByUserName(signInRequest.usernameOrEmail))
                 .orElseThrow { UserNotFoundException("Invalid username or email") }
 
@@ -106,6 +109,14 @@ class UserServiceImpl(
         )
     }
 
+    @Transactional
+    override fun activateUser(token: String): User {
+        val user = findUserByVerificationToken(token)
+        user.enabled = true
+
+        return userRepository.save(user)
+    }
+
     override fun prepareEmail(user: User, url: String): SimpleMailMessage {
         val verificationToken = verificationTokenRepository.save(
             VerificationToken(
@@ -123,34 +134,22 @@ class UserServiceImpl(
         return email
     }
 
-    @Transactional
     @Throws(exceptionClasses = [VerificationTokenNotFoundException::class, PersistenceException::class])
-    fun findUserByVerificationToken(token: String): User {
+    private fun findUserByVerificationToken(token: String): User {
         val verificationToken = verificationTokenRepository.findById(UUID.fromString(token))
 
         if (verificationToken.isEmpty)
-            throw VerificationTokenNotFoundException("You have been already completed registration")
+            throw VerificationTokenNotFoundException("Verification token has not been found")
         if (verificationToken.get().expirationDate.isBefore(LocalDateTime.now()))
-            throw VerificationTokenExpiredException("Your verification token has been expired")
+            throw VerificationTokenExpiredException("Verification token has been expired")
 
         val user = verificationToken.get().user
-        verificationTokenRepository.delete(verificationToken.get())
 
         if (user.enabled)
             throw UserAlreadyActivatedException("Your account has been already activated")
 
         return user
     }
-
-    @Transactional
-    override fun activateUser(token: String): User {
-        val user = findUserByVerificationToken(token)
-        user.enabled = true
-
-        return userRepository.save(user)
-    }
-
-    private fun isEmail(usernameOrEmail: String) = usernameOrEmail.contains('@')
 
     fun userExists(userDto: UserDto): Boolean =
         userRepository.findByUserNameOrEmail(userDto.username, userDto.email).isPresent

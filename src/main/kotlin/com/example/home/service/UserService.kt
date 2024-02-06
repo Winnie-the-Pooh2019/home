@@ -5,22 +5,18 @@ import com.example.home.domain.dto.SignInRequest
 import com.example.home.domain.dto.SignInResponse
 import com.example.home.domain.dto.UserDto
 import com.example.home.domain.model.User
-import com.example.home.exceptions.TokenExpiredException
-import com.example.home.exceptions.VerificationTokenExpiredException
-import com.example.home.exceptions.jpa.RoleNotFoundException
-import com.example.home.exceptions.jpa.UserAlreadyExistsException
-import com.example.home.exceptions.jpa.UserNotFoundException
-import com.example.home.exceptions.jpa.VerificationTokenNotFoundException
+import com.example.home.exceptions.*
 import io.jsonwebtoken.JwtException
 import jakarta.persistence.PersistenceException
-import org.apache.tomcat.websocket.AuthenticationException
 import org.springframework.mail.SimpleMailMessage
+import org.springframework.security.authentication.DisabledException
+import org.springframework.security.authentication.LockedException
 
 interface UserService {
     @Throws(exceptionClasses = [UserAlreadyExistsException::class, RoleNotFoundException::class, PersistenceException::class])
     fun saveUser(userDto: UserDto): User
 
-    @Throws(exceptionClasses = [UserNotFoundException::class, AuthenticationException::class, PersistenceException::class])
+    @Throws(exceptionClasses = [UserNotFoundException::class, DisabledException::class, LockedException::class, PersistenceException::class])
     fun signIn(signInRequest: SignInRequest): SignInResponse
 
     @Throws(exceptionClasses = [JwtException::class, TokenExpiredException::class, UserNotFoundException::class, PersistenceException::class])

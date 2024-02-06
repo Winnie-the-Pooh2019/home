@@ -1,8 +1,9 @@
 package com.example.home.service.impl
 
-import com.example.home.exceptions.jpa.UserNotFoundException
+import com.example.home.exceptions.UserNotFoundException
 import com.example.home.repository.UserRepository
 import com.example.home.service.HomeUserDetailsService
+import com.example.home.utils.HomeAppUtils
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
@@ -10,15 +11,20 @@ import org.springframework.stereotype.Service
 @Service
 class HomeUserDetailsServiceImpl(
     @Autowired
-    private val userRepository: UserRepository
+    private val userRepository: UserRepository,
+    @Autowired
+    private val homeAppUtils: HomeAppUtils
 ) : HomeUserDetailsService {
-    override fun loadUserByUserName(username: String?): UserDetails {
-        if (username == null)
+    override fun loadUserByUserNameOrEmail(usernameOrEmail: String?): UserDetails {
+        if (usernameOrEmail == null)
             throw UserNotFoundException("username cannot be null")
 
-        return userRepository.findByUserName(username)
-            .orElseThrow { UserNotFoundException("no user with such name found") }
+        val user =
+            (if (homeAppUtils.isEmail(usernameOrEmail)) userRepository.findByEmail(usernameOrEmail)
+            else userRepository.findByUserName(usernameOrEmail))
+                .orElseThrow { UserNotFoundException("Invalid username or email") }
+        return user
     }
 
-    override fun loadUserByUsername(username: String?): UserDetails = loadUserByUserName(username)
+    override fun loadUserByUsername(username: String?): UserDetails = loadUserByUserNameOrEmail(username)
 }

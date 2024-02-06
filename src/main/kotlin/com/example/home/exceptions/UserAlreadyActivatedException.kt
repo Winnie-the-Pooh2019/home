@@ -1,3 +1,6 @@
 package com.example.home.exceptions
 
-class UserAlreadyActivatedException(message: String) : Exception(message)
+import com.example.home.exceptions.core.HomeApplicationException
+import org.springframework.http.HttpStatus
+
+class UserAlreadyActivatedException(message: String) : HomeApplicationException(HttpStatus.CONFLICT, message)

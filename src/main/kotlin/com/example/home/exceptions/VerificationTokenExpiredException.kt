@@ -1,3 +1,6 @@
 package com.example.home.exceptions
 
-class VerificationTokenExpiredException(message: String) : Exception(message)
+import com.example.home.exceptions.core.HomeApplicationException
+import org.springframework.http.HttpStatus
+
+class VerificationTokenExpiredException(message: String) : HomeApplicationException(HttpStatus.GONE, message)

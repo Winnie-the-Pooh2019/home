@@ -35,7 +35,7 @@ class JwtAuthenticationFilter(
         val userName = jwtService.extractUserName(jwt)
 
         if (userName.isNotEmpty() && SecurityContextHolder.getContext().authentication == null) {
-            val userDetails = homeUserDetailsService.loadUserByUserName(userName)
+            val userDetails = homeUserDetailsService.loadUserByUserNameOrEmail(userName)
 
             if (jwtService.isTokenValid(jwt, userDetails)) {
                 val securityContext = SecurityContextHolder.createEmptyContext()

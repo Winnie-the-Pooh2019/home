@@ -4,5 +4,5 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 
 interface HomeUserDetailsService : UserDetailsService {
-    fun loadUserByUserName(username: String?): UserDetails
+    fun loadUserByUserNameOrEmail(usernameOrEmail: String?): UserDetails
 }

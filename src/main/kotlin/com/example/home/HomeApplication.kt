@@ -32,6 +32,7 @@ class HomeApplication(
             val userAdmin = User(
                 userName = "admin",
                 email = "admin@admin.com",
+                enabled = false,
                 passWord = passwordEncoder().encode("admin"),
                 roles = setOf(roleAdmin.get())
             )
