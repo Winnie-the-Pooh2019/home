@@ -7,6 +7,8 @@ import com.example.home.domain.dto.UserDto
 import com.example.home.domain.model.User
 import com.example.home.domain.model.VerificationToken
 import com.example.home.exceptions.TokenExpiredException
+import com.example.home.exceptions.UserAlreadyActivatedException
+import com.example.home.exceptions.VerificationTokenExpiredException
 import com.example.home.exceptions.jpa.RoleNotFoundException
 import com.example.home.exceptions.jpa.UserAlreadyExistsException
 import com.example.home.exceptions.jpa.UserNotFoundException
@@ -18,12 +20,15 @@ import com.example.home.service.JwtService
 import com.example.home.service.UserService
 import jakarta.persistence.PersistenceException
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDateTime
+import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Service
@@ -39,7 +44,9 @@ class UserServiceImpl(
     @Autowired
     private val authenticationManager: AuthenticationManager,
     @Autowired
-    private val jwtService: JwtService
+    private val jwtService: JwtService,
+    @Value("\${home.jwt.verification-expiration}")
+    private val verificationTokenExpiration: Int
 ) : UserService {
 
     @Transactional
@@ -100,7 +107,12 @@ class UserServiceImpl(
     }
 
     override fun prepareEmail(user: User, url: String): SimpleMailMessage {
-        val verificationToken = verificationTokenRepository.save(VerificationToken(user = user))
+        val verificationToken = verificationTokenRepository.save(
+            VerificationToken(
+                expirationDate = LocalDateTime.now().plus(verificationTokenExpiration.toLong(), ChronoUnit.MILLIS),
+                user = user
+            )
+        )
 
         val email = SimpleMailMessage()
 
@@ -118,9 +130,14 @@ class UserServiceImpl(
 
         if (verificationToken.isEmpty)
             throw VerificationTokenNotFoundException("You have been already completed registration")
+        if (verificationToken.get().expirationDate.isBefore(LocalDateTime.now()))
+            throw VerificationTokenExpiredException("Your verification token has been expired")
 
         val user = verificationToken.get().user
         verificationTokenRepository.delete(verificationToken.get())
+
+        if (user.enabled)
+            throw UserAlreadyActivatedException("Your account has been already activated")
 
         return user
     }

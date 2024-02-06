@@ -6,6 +6,7 @@ import com.example.home.domain.dto.SignInResponse
 import com.example.home.domain.dto.UserDto
 import com.example.home.domain.model.User
 import com.example.home.exceptions.TokenExpiredException
+import com.example.home.exceptions.VerificationTokenExpiredException
 import com.example.home.exceptions.jpa.RoleNotFoundException
 import com.example.home.exceptions.jpa.UserAlreadyExistsException
 import com.example.home.exceptions.jpa.UserNotFoundException
@@ -28,6 +29,6 @@ interface UserService {
     @Throws(exceptionClasses = [PersistenceException::class])
     fun prepareEmail(user: User, url: String): SimpleMailMessage
 
-    @Throws(exceptionClasses = [PersistenceException::class, VerificationTokenNotFoundException::class])
+    @Throws(exceptionClasses = [PersistenceException::class, VerificationTokenNotFoundException::class, VerificationTokenExpiredException::class])
     fun activateUser(token: String): User
 }
