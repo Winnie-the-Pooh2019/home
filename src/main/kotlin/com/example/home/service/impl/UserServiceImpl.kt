@@ -1,9 +1,6 @@
 package com.example.home.service.impl
 
-import com.example.home.domain.dto.RefreshTokenRequest
-import com.example.home.domain.dto.SignInRequest
-import com.example.home.domain.dto.SignInResponse
-import com.example.home.domain.dto.UserDto
+import com.example.home.domain.dto.*
 import com.example.home.domain.model.User
 import com.example.home.domain.model.VerificationToken
 import com.example.home.exceptions.TokenExpiredException
@@ -18,8 +15,8 @@ import com.example.home.repository.UserRepository
 import com.example.home.repository.VerificationTokenRepository
 import com.example.home.service.JwtService
 import com.example.home.service.UserService
-import com.example.home.utils.HomeAppUtils
 import jakarta.persistence.PersistenceException
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.mail.SimpleMailMessage
@@ -46,14 +43,12 @@ class UserServiceImpl(
     private val authenticationManager: AuthenticationManager,
     @Autowired
     private val jwtService: JwtService,
-    @Autowired
-    private val homeAppUtils: HomeAppUtils,
     @Value("\${home.jwt.verification-expiration}")
     private val verificationTokenExpiration: Int
 ) : UserService {
 
     @Transactional
-    override fun saveUser(userDto: UserDto): User {
+    override fun saveUser(userDto: UserDto, request: HttpServletRequest): User {
         if (userExists(userDto))
             throw UserAlreadyExistsException("Username or email is already taken")
 
@@ -71,17 +66,12 @@ class UserServiceImpl(
     }
 
     override fun signIn(signInRequest: SignInRequest): SignInResponse {
-        authenticationManager.authenticate(
+        val user = authenticationManager.authenticate(
             UsernamePasswordAuthenticationToken(
                 signInRequest.usernameOrEmail,
                 signInRequest.password
             )
-        )
-
-        val user =
-            (if (homeAppUtils.isEmail(signInRequest.usernameOrEmail)) userRepository.findByEmail(signInRequest.usernameOrEmail)
-            else userRepository.findByUserName(signInRequest.usernameOrEmail))
-                .orElseThrow { UserNotFoundException("Invalid username or email") }
+        ).principal as User
 
         val jwt = jwtService.generateToken(user)
         val refreshToken = jwtService.generateRefreshToken(HashMap(), user)

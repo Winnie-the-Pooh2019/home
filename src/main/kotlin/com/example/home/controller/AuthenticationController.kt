@@ -1,7 +1,6 @@
 package com.example.home.controller
 
 import com.example.home.domain.dto.*
-import com.example.home.domain.model.User
 import com.example.home.service.UserService
 import com.example.home.utils.HomeAppUtils
 import jakarta.servlet.http.HttpServletRequest
@@ -21,13 +20,14 @@ class AuthenticationController(
 ) {
 
     @PostMapping("/signup")
-    fun signUp(@RequestBody signUpRequest: UserDto, request: HttpServletRequest): User {
-        val user = userService.saveUser(signUpRequest)
+    fun signUp(@RequestBody signUpRequest: UserDto, request: HttpServletRequest): Redirect {
+        val user = userService.saveUser(signUpRequest, request)
 
-        val email = userService.prepareEmail(user, homeAppUtils.getHostUrl(request))
+        val url = homeAppUtils.getHostUrl(request)
+        val email = userService.prepareEmail(user, url)
         mailSender.send(email)
 
-        return user
+        return Redirect("$url/api/auth/signin")
     }
 
     @GetMapping("/signup/confirm")

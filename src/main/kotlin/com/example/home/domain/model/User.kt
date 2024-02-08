@@ -53,4 +53,14 @@ class User(
     override fun isCredentialsNonExpired(): Boolean = true
 
     override fun isEnabled(): Boolean = enabled
+
+    override fun toString(): String {
+        return """User(
+            |   id = $id,
+            |   username = $username,
+            |   password = $password,
+            |   roles = $roles
+            |)
+        """.trimMargin()
+    }
 }

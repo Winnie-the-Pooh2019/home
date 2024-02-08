@@ -8,13 +8,14 @@ import com.example.home.domain.model.User
 import com.example.home.exceptions.*
 import io.jsonwebtoken.JwtException
 import jakarta.persistence.PersistenceException
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.mail.SimpleMailMessage
 import org.springframework.security.authentication.DisabledException
 import org.springframework.security.authentication.LockedException
 
 interface UserService {
     @Throws(exceptionClasses = [UserAlreadyExistsException::class, RoleNotFoundException::class, PersistenceException::class])
-    fun saveUser(userDto: UserDto): User
+    fun saveUser(userDto: UserDto, request: HttpServletRequest): User
 
     @Throws(exceptionClasses = [UserNotFoundException::class, DisabledException::class, LockedException::class, PersistenceException::class])
     fun signIn(signInRequest: SignInRequest): SignInResponse
