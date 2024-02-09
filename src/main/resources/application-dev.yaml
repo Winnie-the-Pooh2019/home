@@ -10,7 +10,6 @@ spring:
     locations:
       - classpath:/db/migration
       - classpath:/db/callback
-
   mail:
     host: smtp.gmail.com
     port: 587
@@ -26,5 +25,9 @@ spring:
 
 home:
   jwt:
-    secret: bringmetoussr
-    expiration-ms: 60000
+    secret: nevergonnagiveyouupnevergonnaletyoudownnevergonnarunaroundanddesertyou
+    expiration-ms: 1440000
+    refresh-expiration: 10080000
+    verification-expiration: 1440000
+server:
+  port: 8080
