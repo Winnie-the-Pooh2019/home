@@ -1,6 +1,7 @@
 drop table if exists user_roles;
 drop table if exists users;
 drop table if exists roles;
+drop table if exists verification_tokens;
 
 create table roles
 (
@@ -25,6 +26,18 @@ create table user_roles
     constraint fk_user_roles_users foreign key (user_id) references users (id) on delete cascade,
     constraint fk_user_roles_roles foreign key (role_id) references roles (id) on delete cascade
 );
+
+create table verification_tokens
+(
+    token   uuid primary key,
+    user_id uuid,
+
+    constraint fk_verification_tokens_users foreign key (user_id) references users (id) on delete cascade
+);
+
+alter table users add column enabled boolean default false;
+
+alter table verification_tokens add column expiration_date timestamp without time zone;
 
 insert into roles(id, name)
 values (1, 'ROLE_ADMIN');

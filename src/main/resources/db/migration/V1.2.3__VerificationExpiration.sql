@@ -1,1 +1,0 @@
-alter table verification_tokens add column expiration_date timestamp without time zone;
