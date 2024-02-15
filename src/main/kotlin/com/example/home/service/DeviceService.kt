@@ -1,16 +1,14 @@
 package com.example.home.service
 
 import com.example.home.domain.dto.DeviceDto
-import com.example.home.domain.dto.UserDto
+import com.example.home.domain.model.device.Device
 import com.example.home.exceptions.ConvertException
 import jakarta.persistence.PersistenceException
-import org.springframework.stereotype.Service
-import kotlin.jvm.Throws
+import java.util.*
 
-@Service
 interface DeviceService {
     @Throws(exceptionClasses = [ConvertException::class, PersistenceException::class])
-    fun registerDevice(deviceDto: DeviceDto)
+    fun registerDevice(deviceDto: DeviceDto): Device
 
-    fun addUser(userDto: UserDto)
+    fun addUser(userId: UUID, deviceDto: DeviceDto): Device
 }

@@ -1,5 +1,6 @@
 package com.example.home.domain.model
 
+import com.example.home.domain.model.device.Device
 import jakarta.persistence.*
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
@@ -28,6 +29,9 @@ class User(
         joinColumns = [JoinColumn(name = "user_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "role_id", referencedColumnName = "id")])
     var roles: Set<Role> = emptySet(),
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    var device: List<Device> = emptyList(),
 
     @Column(nullable = false, name = "enabled")
     var enabled: Boolean = false
