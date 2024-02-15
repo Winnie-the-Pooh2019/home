@@ -34,6 +34,8 @@ class SecurityConfiguration(
             .authorizeHttpRequests {
                 it
                     .requestMatchers("/api/auth/**").permitAll()
+                    // todo add authorization for devices
+                    .requestMatchers("/home/ws/**").permitAll()
                     .anyRequest().authenticated()
             }
             .authenticationProvider(authenticationProvider())

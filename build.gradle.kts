@@ -24,6 +24,9 @@ repositories {
 }
 
 dependencies {
+//    serialization
+    implementation("com.google.code.gson:gson:2.8.9")
+
 //    validation
     implementation("javax.validation:validation-api:2.0.1.Final")
     implementation("org.webjars:bootstrap:4.6.0")
@@ -42,6 +45,7 @@ dependencies {
 
 
 //    spring boot starters
+    implementation("org.springframework.boot:spring-boot-starter-websocket")
     implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-jdbc")
