@@ -1,8 +1,8 @@
 package com.example.home.service
 
-import com.example.home.domain.dto.RefreshTokenRequest
-import com.example.home.domain.dto.SignInRequest
-import com.example.home.domain.dto.SignInResponse
+import com.example.home.domain.dto.auth.RefreshTokenRequest
+import com.example.home.domain.dto.auth.SignInRequest
+import com.example.home.domain.dto.auth.SignInResponse
 import com.example.home.domain.dto.UserDto
 import com.example.home.domain.model.User
 import com.example.home.exceptions.*

@@ -1,6 +1,6 @@
 package com.example.home.configuration.websocket
 
-import com.example.home.websockets.HomeWebsocketHandler
+import com.example.home.controller.websockets.HomeWebsocketHandler
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.socket.config.annotation.EnableWebSocket

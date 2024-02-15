@@ -1,4 +1,4 @@
-package com.example.home.websockets
+package com.example.home.controller.websockets
 
 import com.example.home.domain.dto.ws.Message
 import com.example.home.repository.UserRepository

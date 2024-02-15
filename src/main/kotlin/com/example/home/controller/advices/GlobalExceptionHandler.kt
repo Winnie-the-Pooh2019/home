@@ -1,6 +1,6 @@
 package com.example.home.controller.advices
 
-import com.example.home.domain.dto.HomeError
+import com.example.home.domain.dto.util.HomeError
 import com.example.home.exceptions.core.HomeApplicationException
 import io.github.oshai.kotlinlogging.KLogger
 import io.github.oshai.kotlinlogging.KotlinLogging

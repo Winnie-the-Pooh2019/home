@@ -1,6 +1,7 @@
 package com.example.home.domain.model.device
 
 import jakarta.persistence.*
+import java.util.HashSet
 import java.util.UUID
 
 @Entity
@@ -17,5 +18,5 @@ data class Device(
     @JoinTable(name = "devices_actions",
         joinColumns = [JoinColumn(name = "device_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "action_id", referencedColumnName = "id")])
-    val actions: Set<Action>
+    val actions: HashSet<Action> = HashSet()
 )
