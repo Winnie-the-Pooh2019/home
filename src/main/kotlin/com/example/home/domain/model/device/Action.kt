@@ -8,8 +8,8 @@ import java.util.UUID
 data class Action(
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private val id: UUID? = null,
+    val id: UUID? = null,
 
     @Column(unique = true, nullable = false)
-    private val name: String
+    val name: String
 )
